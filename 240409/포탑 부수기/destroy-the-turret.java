@@ -26,6 +26,7 @@ public class Main {
             }
         }
 
+        end:
         for(int i=1;i<=K;i++){
             Set<Integer> containIndex=new HashSet<>();
 
@@ -81,6 +82,7 @@ public class Main {
                         twStat[0]=Math.max(0,twStat[0]-halfAttack);
                         if(twStat[0]==0) {
                             tower.remove(nextIdx);
+                            if(tower.keySet().size()==1) break end;
                         }
                     }
                 }
@@ -92,6 +94,7 @@ public class Main {
                     twStat[0]=Math.max(0,twStat[0]-halfAttack);
                     if(twStat[0]==0){
                         tower.remove(pIdx);
+                        if(tower.keySet().size()==1) break end;
                     }
                 }
             }
