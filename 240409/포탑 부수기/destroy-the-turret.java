@@ -33,13 +33,14 @@ public class Main {
             //공격자 선정
             int attacker=selectAttacker();
             int[] attackerStat=tower.get(attacker);
-            attackerStat[0]+=N+M;
             attackerStat[1]=i;
             containIndex.add(attacker);
 
             //공격 대상 선정
             int target=selectTarget();
             containIndex.add(target);
+
+            attackerStat[0]+=N+M;
 
             //공격 수단 선택
             List<Integer> path=checkAttackTool(attacker,target);
@@ -76,6 +77,7 @@ public class Main {
                         int nextIdx=nx*M+ny;
 
                         if(!tower.containsKey(nextIdx)) continue;
+                        if(nextIdx==attacker) continue;
 
                         containIndex.add(nextIdx);
                         int[] twStat=tower.get(nextIdx);
@@ -115,6 +117,7 @@ public class Main {
                 }
             }
         }
+
 
         //가장 강한 포탑 찾기
         System.out.println(tower.get(selectTarget())[0]);
@@ -169,6 +172,7 @@ public class Main {
 
         return curTowers.get(0);
     }
+
 
     static List<Integer> checkAttackTool(int attacker,int target){
         Map<Integer,List<Integer>> paths=new HashMap<>();
