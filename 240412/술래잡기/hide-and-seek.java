@@ -39,7 +39,7 @@ public class Main {
             int x=Integer.parseInt(st.nextToken())-1;
             int y=Integer.parseInt(st.nextToken())-1;
             int dir=Integer.parseInt(st.nextToken());
-            runners[i]=new Runner(x,y,((dir&1)!=0)?2:0);
+            runners[i]=new Runner(x,y,((dir&1)==1)?2:0);
         }
 
         for(int i=0;i<H;i++){
@@ -52,7 +52,6 @@ public class Main {
         for(int i=1;i<=K;i++){
             runnersMove();
             finderMove(i);
-
             if(remainRunner==0) break;
         }
 
@@ -70,7 +69,7 @@ public class Main {
             int ny=runner.y+mv[runner.dir][1];
 
             if(nx<0||nx==N||ny<0||ny==N){
-                runner.dir=((runner.dir&1)==0)? runner.dir-1:runner.dir+1;
+                runner.dir=((runner.dir&1)!=0)? runner.dir-1:runner.dir+1;
                 nx=runner.x+mv[runner.dir][0];
                 ny=runner.y+mv[runner.dir][1];
             }
@@ -92,13 +91,12 @@ public class Main {
             nx+=mv[finderDIrReverseIdx[finderIdx]][0];
             ny+=mv[finderDIrReverseIdx[finderIdx]][1];
 
-            int px=nx+mv[finderDirIdx[finderIdx]][0];
-            int py=nx+mv[finderDirIdx[finderIdx]][1];
+            int px=nx+mv[finderDIrReverseIdx[finderIdx]][0];
+            int py=ny+mv[finderDIrReverseIdx[finderIdx]][1];
 
             if(px<0||px==N||py<0||py==N||visited[px][py]){
                 finderIdx = (++finderIdx == 4) ? 0 : finderIdx;
             }
-            visited[finderX][finderY]=true;
             visited[nx][ny]=true;
         }
         else{
@@ -106,14 +104,12 @@ public class Main {
             ny+=mv[finderDirIdx[finderIdx]][1];
             if(++finderMoveCount==finderMoveLimit){
                 finderMoveCount=0;
-                if(++finderMovesSetCount==2){
+                if(++finderMovesSetCount==2) {
                     finderMoveLimit++;
-                    finderMovesSetCount=0;
+                    finderMovesSetCount = 0;
                 }
+                finderIdx = (++finderIdx == 4) ? 0 : finderIdx;
 
-                if(finderMoveLimit!=N) {
-                    finderIdx = (++finderIdx == 4) ? 0 : finderIdx;
-                }
             }
         }
 
@@ -123,6 +119,7 @@ public class Main {
         if(finderX==0&&finderY==0){
             isReverse=true;
             finderIdx=0;
+            visited[0][0]=true;
         }
         else if(finderX==N/2&&finderY==N/2){
             isReverse=false;
@@ -130,6 +127,7 @@ public class Main {
             finderMoveCount=0;
             finderMoveLimit=1;
             finderMovesSetCount=0;
+            visited=new boolean[N][N];
         }
 
         //술래 찾기
@@ -141,8 +139,8 @@ public class Main {
             if(fx<0||fx>=N||fy<0||fy>=N) break;
 
             if(!tree[fx*N+fy]){
-
                 for(Runner runner:runners){
+                    if(!runner.alive) continue;
                     if(runner.x==fx&&runner.y==fy){
                         runner.alive=false;
                         result+=turn;
@@ -174,6 +172,11 @@ public class Main {
             this.y=y;
             this.dir=dir;
             alive=true;
+        }
+
+        @Override
+        public String toString() {
+            return "x: "+x+" y:"+y+" dir:"+dir+" alive:"+alive;
         }
     }
 
