@@ -93,8 +93,8 @@ public class Main {
 
         if(dir==0){//오른
             dice[0]=d[3];
-            dice[1]=d[5];
-            dice[3]=d[0];
+            dice[1]=d[0];
+            dice[3]=d[5];
             dice[5]=d[1];
         }
         else if(dir==1){//아래
