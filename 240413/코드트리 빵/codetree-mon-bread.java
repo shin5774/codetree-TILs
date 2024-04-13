@@ -11,6 +11,7 @@ public class Main {
     static int finishCount;
     static int [][]mv={{-1,0},{0,-1},{0,1},{1,0}};
 
+
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -37,20 +38,22 @@ public class Main {
 
         int result=0;
         while(true){
+            move(result);
 
             if(result<M){
                 settingPerson(result);
             }
 
-            move(result);
-
             result++;
-
 
             if(finishCount==M){
                 break;
             }
-            
+
+
+
+
+
         }
 
         System.out.println(result);
@@ -109,11 +112,12 @@ public class Main {
 
 
     static void move(int time){
+        List<int[]> finishAxis=new ArrayList<>();
         next:
         for(int i=0,size=Math.min(time,M);i<size;i++){
             int[] person=people[i];
             int[] goal=goals[i];
-            if(person[0]==goals[i][0]&&person[1]==goals[i][1]){ //이미 골인 한 경우
+            if(person[0]==goal[0]&&person[1]==goal[1]){ //이미 골인 한 경우
                 continue;
             }
 
@@ -124,7 +128,6 @@ public class Main {
             visited[person[0]][person[1]]=-1;
             while(!dq.isEmpty()){
                 int[]cur=dq.poll();
-
                 for(int[]next:mv){
                     int nx=cur[0]+next[0];
                     int ny=cur[1]+next[1];
@@ -133,11 +136,12 @@ public class Main {
                     if(visited[nx][ny]!=0 || map[nx][ny]==-1) continue;
 
                     dq.add(new int[]{nx,ny});
-                    visited[nx][ny]=cur[0]*N+cur[1];
+                    visited[nx][ny]=cur[0]*N+cur[1]+1;
 
+                   
                     if(nx==goal[0]&&ny==goal[1]){ //발견
                         while(true){
-                            int prev=visited[nx][ny];
+                            int prev=visited[nx][ny]-1;
 
                             int px=prev/N;
                             int py=prev%N;
@@ -146,8 +150,7 @@ public class Main {
                                 person[1]=ny;
 
                                 if(goal[0]==nx&&goal[1]==ny){
-                                    finishCount++;
-                                    map[nx][ny]=-1;
+                                    finishAxis.add(new int[]{nx,ny});
                                 }
 
                                 continue next;
@@ -163,5 +166,10 @@ public class Main {
             }
         }
 
+
+        for(int[] fa:finishAxis){
+            finishCount++;
+            map[fa[0]][fa[1]]=-1;
+        }
     }
 }
